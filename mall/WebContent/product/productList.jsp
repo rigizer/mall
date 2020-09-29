@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>search.jsp</title>
+		<title>productList.jsp</title>
 		
 		<!-- Bootstrap Framework 사용 -->
 		
@@ -37,16 +37,14 @@
 				currentPage = Integer.parseInt(request.getParameter("currentPage"));	// currentPage를 파라미터 값으로 변경
 			}
 			
-			String search = "";	// 검색 기본값
-			
-			if (request.getParameter("search") != null) { // null인지 아닌지 체크
-				search = request.getParameter("search"); // search를 파라미터 값으로 변경
+			int thisCategoryId = 0;	// 0인경우 전체목록, 0이 아닌경우 특정 카테고리별 상품목록 출력
+			if (request.getParameter("thisCategoryId") != null) { // null인지 아닌지 체크
+				thisCategoryId = Integer.parseInt(request.getParameter("thisCategoryId")); // thisCategoryId를 파라미터 값으로 변경
 			}
 			
-			int searchCategoryId = 0;
-			
-			if (request.getParameter("searchCategoryId") != null) { // null인지 아닌지 체크
-				searchCategoryId = Integer.parseInt(request.getParameter("searchCategoryId")); // searchCategoryId를 파라미터 값으로 변경
+			String thisCategoryName = "전체 카테고리";
+			if (request.getParameter("thisCategoryName") != null) { // null인지 아닌지 체크
+				thisCategoryName = request.getParameter("thisCategoryName"); // thisCategoryName을 파라미터 값으로 변경
 			}
 			
 			int rowPerPage = 10; // 한 페이지당 데이터를 표시할 개수
@@ -58,12 +56,17 @@
 	        ProductDao productDao = new ProductDao();
 	        
 	        // 프로덕트 리스트
-	        ArrayList<Product> searchList = null;
-	        if (searchCategoryId == 0) {	// 카테고리 선택 안했을 때
-	        	searchList = productDao.selectSearchList(search, limit1, limit2);
+	        ArrayList<Product> productList = null;
+	        if (thisCategoryId == 0) {	// 카테고리 선택 안했을 때
+	        	productList = productDao.selectProductList(limit1, limit2);
 	        } else { // 특정 카테고리에 있는 물품 검색시
-	        	searchList = productDao.selectSearchCategoryList(search, searchCategoryId, limit1, limit2);
-	        }	       
+	        	productList = productDao.selectProductListById(thisCategoryId, limit1, limit2);
+	        }
+	        
+	        CategoryDao categoryDao = new CategoryDao();
+	        
+	        // 카테고리 선택메뉴
+	        ArrayList<Category> categoryList = categoryDao.selectCategoryListAll();
 		%>
 		<!-- 상단 메뉴 -->
 		<div>
@@ -74,16 +77,44 @@
 		<div style="margin-top: 35px;"></div>
 		
 		<div class="container">
-			<h3>상품 검색결과</h3>
+			<h3><%=thisCategoryName %></h3>
+			
+			<br>
+			
+			<div class="row">
+				<table width="100%">
+					<tr>
+						<td>
+							<a class="nav-link" href="<%=request.getContextPath() %>/product/productList.jsp">
+								<button type="button" class="btn btn-primary btn-block">전체 카테고리</button>
+							</a>
+						</td>
+						
+						<%
+							for (Category c : categoryList) {
+								int categoryId = c.getCategoryId();
+								String categoryName = c.getCategoryName();
+								%>
+									<td>
+										<a class="nav-link" href="<%=request.getContextPath() %>/product/productList.jsp?thisCategoryId=<%=categoryId %>&thisCategoryName=<%=categoryName %>">
+											<button type="button" class="btn btn-secondary btn-block"><%=categoryName %></button>
+										</a>
+									</td>
+								<%
+							}
+						%>
+					</tr>
+				</table>
+			</div>
 			
 			<br>
 			
 			<%
-				if (searchList.size() != 0) {	// 상품이 존재할 때
+				if (productList.size() != 0) {	// 상품이 존재할 때
 					%>
 						<table class="table" style="text-align: center;">
 							<%
-								for (Product p : searchList) {
+								for (Product p : productList) {
 									int productId = p.getProductId();
 									String productPic = p.getProductPic();
 									String productName = p.getProductName();
@@ -130,7 +161,7 @@
 									if (currentPage > 1) { // currentPage가 1보다 클 때만 처음으로 갈 수 있음
 										%>
 											<li class="page-item">
-											<a class="page-link" href="./search.jsp?search=<%=search %>&searchCategoryId=<%=searchCategoryId %>&currentPage=1">처음으로</a>
+											<a class="page-link" href="./productList.jsp?&thisCategoryId=<%=thisCategoryId %>&thisCategoryName=<%=thisCategoryName %>&currentPage=1">처음으로</a>
 										<%
 									} else { // 첫 페이지 일 때 처음으로 버튼 표시 안 함
 										%>
@@ -146,7 +177,7 @@
 									if (currentPage > 1) { // currentPage가 1보다 클 때만 이전으로 갈 수 있음
 										%>
 											<li class="page-item">
-											<a class="page-link" href="./search.jsp?search=<%=search %>&searchCategoryId=<%=searchCategoryId %>&currentPage=<%=currentPage - 1 %>">이전</a>
+											<a class="page-link" href="./productList.jsp?&thisCategoryId=<%=thisCategoryId %>&thisCategoryName=<%=thisCategoryName %>&currentPage=<%=currentPage - 1 %>">이전</a>
 										<%
 									} else { // 1이거나 그 이하면 버튼 표시 안 함
 										%>
@@ -160,13 +191,11 @@
 							<%
 								int totalCount = 0;	// 전체 데이터 수
 								
-								if (searchCategoryId == 0) {
-									totalCount = productDao.countSearchData(search);	// 전체 데이터 개수
+								if (thisCategoryId == 0) {
+									totalCount = productDao.countAllData();	// 전체 데이터 개수
 								} else {
-									totalCount = productDao.countSearchCategoryData(search, searchCategoryId);	// 특정 카테고리별 개수
+									totalCount = productDao.countAllDataById(thisCategoryId);	// 특정 카테고리별 개수
 								}
-								
-								System.out.println("검색된 데이터 수: "+totalCount + " / 검색어: " + search);
 								
 								int lastPage = totalCount / rowPerPage;
 								if (totalCount % rowPerPage != 0) {	// 10 미만의 개수의 데이터가 있는 페이지를 표시
@@ -197,7 +226,7 @@
 										} else {	// 다음 페이지
 											%>
 												<li class="page-item">
-													<a class="page-link" href="./search.jsp?search=<%=search %>&searchCategoryId=<%=searchCategoryId %>&currentPage=<%=i %>"><%=i %></a>
+													<a class="page-link" href="./productList.jsp?&thisCategoryId=<%=thisCategoryId %>&thisCategoryName=<%=thisCategoryName %>&currentPage=<%=i %>"><%=i %></a>
 												</li>
 											<%
 										}
@@ -209,7 +238,7 @@
 									if (currentPage < lastPage) { // currentPage가 lastPage보다 작을 때만 다음으로 갈 수 있음
 										%>
 											<li class="page-item">
-											<a class="page-link" href="./search.jsp?search=<%=search %>&searchCategoryId=<%=searchCategoryId %>&currentPage=<%=currentPage + 1 %>">다음</a>
+											<a class="page-link" href="./productList.jsp?&thisCategoryId=<%=thisCategoryId %>&thisCategoryName=<%=thisCategoryName %>&currentPage=<%=currentPage + 1 %>">다음</a>
 										<%
 									} else { // 마지막 페이지 일 때 다음 버튼 표시 안 함
 										%>
@@ -224,7 +253,7 @@
 									if (currentPage < lastPage) { // currentPage가 lastPage보다 작을 때만 마지막으로 갈 수 있음
 										%>
 											<li class="page-item">
-											<a class="page-link" href="./search.jsp?search=<%=search %>&searchCategoryId=<%=searchCategoryId %>&currentPage=<%=lastPage %>">마지막으로</a>
+											<a class="page-link" href="./productList.jsp?&thisCategoryId=<%=thisCategoryId %>&thisCategoryName=<%=thisCategoryName %>&currentPage=<%=lastPage %>">마지막으로</a>
 										<%
 									} else { // 마지막 페이지 일 때 마지막으로 버튼 표시 안 함
 										%>
@@ -248,7 +277,7 @@
 						</table>
 					<%
 				} else {	// 상품이 존재하지 않을 때
-					%>상품 결과가 없습니다. 다른 검색어를 입력해주세요.<%
+					%>상품 결과가 없습니다.<%
 				}
 			%>
 		</div>

@@ -68,7 +68,7 @@
 							String categoryName = c.getCategoryName();
 							
 							%>
-								<a class="nav-link" href="<%=request.getContextPath() %>/product/productList.jsp?thisCategoryId=<%=categoryId %>">
+								<a class="nav-link" href="<%=request.getContextPath() %>/product/productList.jsp?thisCategoryId=<%=categoryId %>&thisCategoryName=<%=categoryName %>">
 									<button type="button" class="btn btn-secondary btn-block"><%=categoryName %></button>
 								</a>
 							<%
@@ -90,6 +90,7 @@
 			<div class="row" style="text-align: center;">
 				<%
 					for (Category c : categoryList2) {
+						int categoryId = c.getCategoryId();
 						String categoryPic = c.getCategoryPic();
 						String categoryName = c.getCategoryName();
 						
@@ -98,12 +99,12 @@
 								<table width="100%">
 									<tr>
 										<td>
-											<a href=""><img class="rounded-circle" width="200" height="200" src="/mall-admin/image/<%=categoryPic %>"></a>
+											<a href="<%=request.getContextPath() %>/product/productList.jsp?thisCategoryId=<%=categoryId %>"><img class="rounded-circle" width="200" height="200" src="/mall-admin/image/<%=categoryPic %>"></a>
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<%=categoryName %>
+											<a style="color: black;" href="<%=request.getContextPath() %>/product/productList.jsp?thisCategoryId=<%=categoryId %>"><%=categoryName %></a>
 										</td>
 									</tr>
 								</table>

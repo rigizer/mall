@@ -20,7 +20,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>productOne.jsp</title>
+		<title>buyProduct.jsp</title>
 		
 		<!-- Bootstrap Framework 사용 -->
 		
@@ -56,7 +56,7 @@
 		<div style="margin-top: 35px;"></div>
 		
 		<div class="container">
-			<h3>상품 상세보기</h3>
+			<h3>상품 주문하기</h3>
 			
 			<br>
 			
@@ -103,13 +103,39 @@
 				<%
 					if (product.getProductSoldout().equals("N")) {
 						%>
-							<tr>
-								<td colspan="2">
-									<a style="text-decoration: none; color: black;" href="<%=request.getContextPath() %>/product/buyProduct.jsp?productId=<%=productId %>">
-										<button class="btn btn-primary btn-block" type="button">주문하기</button>
-									</a>
-								</td>
-							</tr>
+							<form method="post" action="<%=request.getContextPath() %>/orders/addOrdersAction.jsp">
+								<input type="hidden" name="productId" value="<%=product.getProductId() %>">
+								<input type="hidden" name="productPrice" value="<%=product.getProductPrice() %>">
+								
+								
+								<tr>
+									<td>
+										주문수량
+									</td>
+									<td>
+										<select class="form-control" name="ordersAmount">
+											<%
+												for (int i = 1; i <= 10; i++) {
+													%><option value="<%=i %>"><%=i %></option><%
+												}
+											%>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										배송지
+									</td>
+									<td>
+										<input type="text" class="form-control" name="ordersAddr">
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<button class="btn btn-primary btn-block" type="submit">주문하기</button>
+									</td>
+								</tr>
+							</form>
 						<%
 					}
 				%>
