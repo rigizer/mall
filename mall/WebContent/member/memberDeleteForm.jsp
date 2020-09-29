@@ -40,19 +40,6 @@
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 	</head>
 	<body>
-		<%
-			// 요청 인코딩 설정
-			request.setCharacterEncoding("UTF-8");
-		
-			String memberEmail = session.getAttribute("loginMemberEmail").toString();	// 현재 세션에 저장되어있는 회원 정보
-			
-			Member member = new Member();
-			member.setMemberEmail(memberEmail);
-			
-			MemberDao memberDao = new MemberDao();
-			memberDao.selectMemberOne(member);
-		%>
-	
 		<!-- 상단 메뉴 -->
 		<div>
 			<!-- headMenu 항목을 include한다 -->
@@ -62,58 +49,27 @@
 		<div style="margin-top: 35px;"></div>
 		
 		<div class="container">
-			<h3>개인정보 관리</h3>
+			<h3>회원탈퇴</h3>
 			
 			<br>
 			
-			<table class="table table-hover" style="text-align: center">
-				<%
-					String memberName = member.getMemberName();
-					String memberDate = member.getMemberDate();
-					String memberSubscription = member.getMemberSubscription();
-				%>
-				<tr>
-					<td>이름</td>
-					<td><%=memberName %></td>
-				</tr>
-				<tr>
-					<td>이메일</td>
-					<td><%=memberEmail %></td>
-				</tr>
-				<tr>
-					<td>가입일자</td>
-					<td><%=memberDate %></td>
-				</tr>
-				<tr>
-					<td>가입/탈퇴 여부</td>
-					<td>
-						<%
-							if (memberSubscription.equals("Y")) {	// 가입되어있을 때
-								%>정상가입<%
-							} else {	// 탈퇴한 회원일 때
-								%>탈퇴한 사용자<%
-							}
-						%>
-					</td>
-				</tr>
-				<tr>
-					<td>탈퇴하기</td>
-					<td>
-						<%
-							if (memberSubscription.equals("Y")) {	// 가입되어있을 때
-								%><button type="button" class="btn btn-danger btn-sm" onclick="location.href='<%=request.getContextPath() %>/member/memberDeleteForm.jsp'">회원탈퇴</button><%
-							} else {	// 탈퇴한 회원일 때
-								%>탈퇴완료<%
-							}
-						%>
-					</td>
-				</tr>
-			</table>
+			<form method="post" action="<%=request.getContextPath() %>/member/memberDeleteAction.jsp">
+				<table class="table table-hover" style="text-align: center">
+					<tr>
+						<td colspan="2">정말로 회원탈퇴를 진행하시겠습니까?<br>비밀번호를 다시 한 번 입력해주세요.</td>
+					</tr>
+					<tr>
+						<td>비밀번호</td>
+						<td><input type="password" class="form-control" name="password"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><button type="submit" class="btn btn-danger btn-sm">회원탈퇴</button></td>
+					</tr>
+				</table>
+			</form>
 		</div>
 			
 		<div style="margin-top: 60px;"></div>
-		
-		
 		
 		<!-- 하단 메뉴 -->
 		<div>

@@ -40,9 +40,8 @@
 		%>
 			<script>
 				alert("회원가입되었습니다.\n로그인을 해 주세요.");
+				location.href="<%=request.getContextPath() %>/member/login.jsp";
 			</script>
 		<%
-		
-		response.sendRedirect(request.getContextPath() + "/member/login.jsp");	
 	}
 %>

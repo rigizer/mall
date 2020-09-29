@@ -3,19 +3,6 @@
 <%@ page import="dao.*" %>
 <%@ page import="vo.*" %>
 
-<%
-	if (session.getAttribute("loginMemberEmail") == null) { // 세션이 유지되어 있는 경우
-		%>
-			<script>
-				alert("로그인이 필요합니다.");
-			</script>
-		<%
-		
-		response.sendRedirect(request.getContextPath() + "/member/login.jsp");
-		return;
-	}
-%>
-
 <!DOCTYPE html>
 <html>
 	<head>

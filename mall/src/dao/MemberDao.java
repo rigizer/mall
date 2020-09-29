@@ -102,6 +102,36 @@ public class MemberDao {
 		return returnMember;	// null이면 로그인 실패, null이 아니면 로그인 성공 및 member_email 반환
 	}
 	
+	// 회원탈퇴시 비밀번호 일치여부 확인
+	public Member passwordCheck(Member member) throws Exception {
+		// 반환할 객체 생성 (기본값 null)
+		Member returnMember = null;
+		
+		DBUtil dbUtil = new DBUtil();	// 데이터베이스 정보가 담긴 객체 생성
+		Connection conn = dbUtil.getConnection(); // 데이터베이스 접속
+		
+		// SQL 명령, 명령 준비
+		String sql = "select member_email, member_pw from member where member_email = ?";
+		PreparedStatement stmt = conn.prepareStatement(sql);   
+        
+		stmt.setString(1, member.getMemberEmail());
+		
+		// SQL 명령 실행
+		ResultSet rs = stmt.executeQuery();
+		
+		// 데이터베이스 내용 불러오기
+		while(rs.next()) {
+			returnMember = new Member(); // 멤버 객체 생성
+			returnMember.setMemberEmail(rs.getString("member_email"));	// 이메일 반환
+			returnMember.setMemberPw(rs.getString("member_pw"));	// 패스워드 반환
+		}
+		
+		conn.close(); // 데이터베이스 사용을 다 했으면 접속을 종료한다.
+		
+		// 최종 데이터 반환
+		return returnMember;
+	}
+	
 	// Member 상세페이지 검색용
 	public Member selectMemberOne(Member member) throws Exception {		
 		DBUtil dbUtil = new DBUtil();	// 데이터베이스 정보가 담긴 객체 생성
