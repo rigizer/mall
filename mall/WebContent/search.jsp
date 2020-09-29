@@ -28,6 +28,9 @@
 	</head>
 	<body>
 		<%
+			// 요청 인코딩 설정
+			request.setCharacterEncoding("UTF-8");
+		
 			int currentPage = 1;	// 기본적으로 1페이지 표시하기 위함
 			
 			if (request.getParameter("currentPage") != null) { // null인지 아닌지 체크
@@ -66,25 +69,42 @@
 			<br>
 			
 			<%
-				if (searchList != null) {	// 상품이 존재할 때
+				if (searchList.size() != 0) {	// 상품이 존재할 때
 					%>
-						<table class="table table-hover" style="text-align: center">
+						<table class="table" style="text-align: center;">
 							<%
 								for (Product p : searchList) {
+									int productId = p.getProductId();
 									String productPic = p.getProductPic();
 									String productName = p.getProductName();
 									int productPrice = p.getProductPrice();
 									String productSoldout = p.getProductSoldout();
 									%>
 										<tr>
-											<td rowspan="2"><%=productPic %></td>
-											<td><%=productName %></td>
+											<td rowspan="3" width="30%">
+												<a href="<%=request.getContextPath() %>/product/productOne.jsp?productId=<%=productId %>">
+													<img width="300px" height="300px"src="/mall-admin/image/<%=productPic %>">
+												</a>
+											</td>
+											<td class="align-middle">
+												<a style="color: black;" href="<%=request.getContextPath() %>/product/productOne.jsp?productId=<%=productId %>">
+													<%=productName %>
+												</a>
+											</td>
 										</tr>
 										<tr>
-											<td><%=productPrice %>원</td>
+											<td class="align-middle"><%=productPrice %>원</td>
 										</tr>
 										<tr>
-											<td><%=productSoldout %></td>
+											<td class="align-middle">
+												<%
+													if (productSoldout.equals("Y")) { // 품절시
+														%><button type="button" class="btn btn-danger btn-sm">&nbsp;&nbsp;품절&nbsp;&nbsp;</button><%
+													} else {	// 판매중
+														%><button type="button" class="btn btn-success btn-sm">판매중</button><%
+													}							
+												%>
+											</td>
 										</tr>
 									<%
 								}

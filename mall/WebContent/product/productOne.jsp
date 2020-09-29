@@ -62,8 +62,8 @@
 			
 			<table class="table table-hover" style="text-align: center;">
 				<tr>
-					<td>상품 이미지</td>
-					<td>
+					<td width="30%">상품 이미지</td>
+					<td width="70%">
 						<img width="300px" height="300px" src="/mall-admin/image/<%=product.getProductPic() %>">
 					</td>
 				</tr>
@@ -100,39 +100,45 @@
 					</td>
 				</tr>
 				
-				<form method="post" action="<%=request.getContextPath() %>/orders/addOrdersAction.jsp">
-					<input type="hidden" name="productId" value="<%=product.getProductId() %>">
-					<input type="hidden" name="productPrice" value="<%=product.getProductPrice() %>">
-					
-					
-					<tr>
-						<td>
-							주문수량
-						</td>
-						<td>
-							<select class="form-control" name="ordersAmount">
-								<%
-									for (int i = 1; i <= 10; i++) {
-										%><option value="<%=i %>"><%=i %></option><%
-									}
-								%>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							배송지
-						</td>
-						<td>
-							<input type="text" class="form-control" name="ordersAddr">
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<button class="btn btn-primary btn-block" type="submit">주문하기</button>
-						</td>
-					</tr>
-				</form>
+				<%
+					if (product.getProductSoldout().equals("N")) {
+						%>
+							<form method="post" action="<%=request.getContextPath() %>/orders/addOrdersAction.jsp">
+								<input type="hidden" name="productId" value="<%=product.getProductId() %>">
+								<input type="hidden" name="productPrice" value="<%=product.getProductPrice() %>">
+								
+								
+								<tr>
+									<td>
+										주문수량
+									</td>
+									<td>
+										<select class="form-control" name="ordersAmount">
+											<%
+												for (int i = 1; i <= 10; i++) {
+													%><option value="<%=i %>"><%=i %></option><%
+												}
+											%>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										배송지
+									</td>
+									<td>
+										<input type="text" class="form-control" name="ordersAddr">
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<button class="btn btn-primary btn-block" type="submit">주문하기</button>
+									</td>
+								</tr>
+							</form>
+						<%
+					}
+				%>
 			</table>
 		</div>
 		

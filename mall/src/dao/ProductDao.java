@@ -152,7 +152,7 @@ public class ProductDao {
 		Connection conn = dbUtil.getConnection(); // 데이터베이스 접속
 		
 		// SQL 명령, 명령 준비
-		String sql = "select product_id, category_id, product_name, product_price, product_content, product_soldout from product where product_name like ? order by product_id asc limit ?, ?";
+		String sql = "select product_id, category_id, product_name, product_price, product_content, product_soldout, product_pic from product where product_name like ? order by product_id asc limit ?, ?";
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		stmt.setString(1, "%"+search+"%");	// 첫 번째 인자 (검색어)
 		stmt.setInt(2, limit1);		// 두 번째 인자 (시작 데이터)
@@ -163,7 +163,7 @@ public class ProductDao {
 		
 		// 데이터베이스 내용 불러오기
 		
-		if (!search.equals(null) || !search.equals("")) {
+		if (!search.equals(null) && !search.equals("")) {	// 검색어가 없는경우는 건너뜀, 검색어가 있는경우에만 list에 결과를 추가
 			while(rs.next()) {
 				Product product = new Product();	// 프로덕트 객체 생성
 				product.setProductId(rs.getInt("product_id"));
@@ -172,6 +172,7 @@ public class ProductDao {
 				product.setProductPrice(rs.getInt("product_price"));
 				//product.productContent = rs.getString("product_content");
 				product.setProductSoldout(rs.getString("product_soldout"));
+				product.setProductPic(rs.getString("product_pic"));
 				list.add(product);	// 리스트에 데이터 추가
 			}
 		}
