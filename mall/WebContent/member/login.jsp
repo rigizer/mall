@@ -52,21 +52,18 @@
 			<br>
 			
 			<form method="post" action="<%=request.getContextPath() %>/member/loginAction.jsp">
-				<table width="40%" style="margin: auto; text-align: center;">
+				<table width="35%" style="margin: auto; text-align: center;">
 					<tr>
-						<td width="15%">ID</td>
-						<td width="85%">
-							<input type="text" class="form-control" name="memberEmail">
-						</td>
+						<td><input type="text" class="form-control" name="memberEmail"></td>
 					</tr>
 					<tr>
-						<td>PW</td>
 						<td>
 							<input type="password" class="form-control" name="memberPw">
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2">
+						<td>
+							<div style="margin-top: 15px;"></div>
 							<button type="submit" class="btn btn-primary btn-block">로그인</button>
 						</td>
 					</tr>

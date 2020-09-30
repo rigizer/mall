@@ -50,27 +50,34 @@
 			<br>
 			
 			<form method="post" action="<%=request.getContextPath() %>/member/signupAction.jsp">
-				<table width="40%" style="margin: auto; text-align: center;">
+				<table width="35%" style="margin: auto; text-align: left;">
 					<tr>
-						<td>ID</td>
+						<td>E-mail 주소</td>
+					</tr>
+					<tr>
 						<td>
 							<input type="text" class="form-control" name="memberEmail">
 						</td>
 					</tr>
 					<tr>
-						<td>PW</td>
+						<td>비밀번호</td>
+					</tr>
+					<tr>
 						<td>
 							<input type="password" class="form-control" name="memberPw">
 						</td>
 					</tr>
 					<tr>
 						<td>이름</td>
+					</tr>
+					<tr>
 						<td>
 							<input type="text" class="form-control" name="memberName">
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2">
+						<td>
+							<div style="margin-top: 15px;"></div>
 							<button type="submit" class="btn btn-primary btn-block">가입</button>
 						</td>
 					</tr>
