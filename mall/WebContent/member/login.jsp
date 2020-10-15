@@ -54,11 +54,11 @@
 			<form method="post" action="<%=request.getContextPath() %>/member/loginAction.jsp">
 				<table width="35%" style="margin: auto; text-align: center;">
 					<tr>
-						<td><input type="text" class="form-control" name="memberEmail"></td>
+						<td><input type="text" class="form-control" name="memberEmail" placeholder="E-mail 주소" onclick="this.value='myid@goodee.co.kr'"></td>
 					</tr>
 					<tr>
 						<td>
-							<input type="password" class="form-control" name="memberPw">
+							<input type="password" class="form-control" name="memberPw" placeholder="비밀번호" onclick="this.value='password';">
 						</td>
 					</tr>
 					<tr>

@@ -43,7 +43,7 @@
 		<div style="margin-top: 35px;"></div>
 		
 		<div class="container">
-			<h3>공지사항</h3>
+			<h3><a style="color: black;" href="<%=request.getContextPath() %>/notice/noticeList.jsp">공지사항</a></h3>
 			
 			<br>
 			
